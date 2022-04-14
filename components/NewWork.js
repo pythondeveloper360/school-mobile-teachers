@@ -14,13 +14,15 @@ import styles from "../styles";
 class NewWork extends Component {
   constructor() {
     super();
+    this.postWork = this.postWork.bind(this);
     this.state = {
       todayWork: false,
       email: "",
       loading: false,
+      password: "",
       work: [{ name: "", hw: "", cw: "" }],
     };
-    this.periods = ['First','Second','Third','Forth','Fifth']
+    this.periods = ["First", "Second", "Third", "Forth", "Fifth"];
     this.styles = StyleSheet.create(styles);
   }
   componentDidMount() {
@@ -30,7 +32,8 @@ class NewWork extends Component {
   }
   async setEmail() {
     let email = await AsyncStorage.getItem("@email");
-    this.setState({ email: email });
+    let password = await AsyncStorage.getItem("@password");
+    this.setState({ email: email, password: password });
   }
   checkTodayWork() {
     this.setState({ loading: true });
@@ -47,8 +50,21 @@ class NewWork extends Component {
         this.setState({ loading: false });
       });
   }
-  postWork(){
-    
+  postWork() {
+    fetch("https://school-server.herokuapp.com/uploadWork", {
+      method: "POST",
+      body: JSON.stringify({
+        email: this.state.email,
+        password: this.state.password,
+        work: this.state.work,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.work) {
+          this.setState({ todayWork: true });
+        }
+      });
   }
   render() {
     return (
@@ -63,7 +79,10 @@ class NewWork extends Component {
               <ScrollView>
                 {this.state.work.map((work, index) => (
                   <View key={index}>
-                    <Text style = {{margin:5}}>{this.periods[index]?this.periods[index]:'Extra'} Period</Text>
+                    <Text style={{ margin: 5 }}>
+                      {this.periods[index] ? this.periods[index] : "Extra"}{" "}
+                      Period
+                    </Text>
                     <TextInput
                       style={this.styles.workInput}
                       placeholder="Subject"
@@ -83,13 +102,19 @@ class NewWork extends Component {
                     style={this.styles.workAddButton}
                     onPress={() => {
                       this.setState({
-                        work: [...this.state.work, { name: "", hw: "", cw: "" }],
+                        work: [
+                          ...this.state.work,
+                          { name: "", hw: "", cw: "" },
+                        ],
                       });
                     }}
                   >
                     <Icon name="pluscircleo" size={30} color="#0c9c88" />
                   </TouchableOpacity>
-                  <TouchableOpacity style={this.styles.workAddButton}>
+                  <TouchableOpacity
+                    style={this.styles.workAddButton}
+                    onPress={this.postWork}
+                  >
                     <Icon name="check" size={30} color="#0c9c88" />
                   </TouchableOpacity>
                 </View>
