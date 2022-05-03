@@ -3,8 +3,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { Component } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
-import Works from "./components/Works";
+import Icon from "react-native-vector-icons/AntDesign";
 import NewWork from "./components/NewWork";
+import Works from "./components/Works";
 import styles from "./styles";
 
 const Tab = createBottomTabNavigator();
@@ -72,8 +73,30 @@ export default class App extends Component {
           <>
             <NavigationContainer>
               <Tab.Navigator>
-                <Tab.Screen name="Works" component={Works} />
-                <Tab.Screen name="New Work" component={NewWork} />
+                <Tab.Screen
+                  name="Works"
+                  component={Works}
+                  options={{
+                    tabBarLabel: "Works",
+                    tabBarIcon: () => (
+                      <Icon name="book" size={25} color="#0c9c88" />
+                    ),
+                  }}
+                />
+                <Tab.Screen name="New Work" component={NewWork}
+                options={{
+                  tabBarLabel: "New work",
+                  tabBarIcon: () => (
+                    <Icon name="addfile" size={25} color="#0c9c88" />
+                  ),
+                }} />
+                <Tab.Screen name="Status" component={NewWork}
+                options={{
+                  tabBarLabel: "Works",
+                  tabBarIcon: () => (
+                    <Icon name="user" size={25} color="#0c9c88" />
+                  ),
+                }} />
               </Tab.Navigator>
             </NavigationContainer>
           </>

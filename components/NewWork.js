@@ -51,17 +51,20 @@ class NewWork extends Component {
       });
   }
   postWork() {
+    let date = new Date();
+    console.log( `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`);
     fetch("https://school-server.herokuapp.com/uploadWork", {
       method: "POST",
       body: JSON.stringify({
         email: this.state.email,
         password: this.state.password,
         work: this.state.work,
+        date: date.toDateString(),
       }),
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.work) {
+        if (data.status) {
           this.setState({ todayWork: true });
         }
       });
@@ -74,7 +77,7 @@ class NewWork extends Component {
         ) : (
           <>
             {this.state.todayWork ? (
-              <Text>Today's work has already been uploaded</Text>
+              <Text style = {this.styles.work}>Today's work has already been uploaded !</Text>
             ) : (
               <ScrollView>
                 {this.state.work.map((work, index) => (
@@ -84,14 +87,29 @@ class NewWork extends Component {
                       Period
                     </Text>
                     <TextInput
+                      value={this.state.work[index].name}
+                      onChangeText={(text) => {
+                        this.state.work[index].name = text;
+                        this.setState(this.state);
+                      }}
                       style={this.styles.workInput}
                       placeholder="Subject"
                     />
                     <TextInput
+                      value={this.state.work[index].cw}
+                      onChangeText={(text) => {
+                        this.state.work[index].cw = text;
+                        this.setState(this.state);
+                      }}
                       style={this.styles.workInput}
                       placeholder="Class Work"
                     />
                     <TextInput
+                      value={this.state.work[index].hw}
+                      onChangeText={(text) => {
+                        this.state.work[index].hw = text;
+                        this.setState(this.state);
+                      }}
                       style={this.styles.workInput}
                       placeholder="Home Work"
                     />

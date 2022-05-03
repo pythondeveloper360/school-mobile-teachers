@@ -17,7 +17,8 @@ let styles = {
     textAlign:"center"
   },
   workContainer:{
-    width:"100%",
+    margin:"5%",
+    width:"90%",
     backgroundColor:'#74f296',
     padding:10,
     marginBottom:5
@@ -42,6 +43,7 @@ let styles = {
     padding: 10,
     borderRadius: 5,
     textAlign: "center",
+    margin:2
   },
   loadingFlag: {
     width: "100%",

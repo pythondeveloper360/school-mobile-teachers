@@ -1,11 +1,19 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Component } from "react";
-import { ScrollView, StyleSheet,BackHandler, Text, View } from "react-native";
+import {
+  BackHandler,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import styles from "../styles";
 
 class Works extends Component {
   constructor() {
     super();
+    this.loadWorks = this.loadWorks.bind(this)
     this.state = {
       works: [],
       email: "",
@@ -13,13 +21,14 @@ class Works extends Component {
       selectedWorkId: "",
       selectedWorkDate: "",
       selectedWork: [],
+      loading: false,
     };
     this.styles = StyleSheet.create(styles);
-    BackHandler.addEventListener("hardwareBackPress",()=>{
-        if (this.state.workDisplay){
-          this.setState({workDisplay:false})
-          return true;
-        }
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      if (this.state.workDisplay) {
+        this.setState({ workDisplay: false });
+        return true;
+      }
     });
   }
   componentDidMount() {
@@ -32,6 +41,7 @@ class Works extends Component {
     this.setState({ email: email });
   }
   loadWorks() {
+    this.setState({ loading: true });
     fetch("https://school-server.herokuapp.com/works", {
       headers: {
         email: this.state.email,
@@ -42,6 +52,9 @@ class Works extends Component {
         if (data.works) {
           this.setState({ works: data.works });
         }
+      })
+      .finally(() => {
+        this.setState({ loading: false });
       });
   }
   loadWorkDetais(id) {
@@ -79,9 +92,17 @@ class Works extends Component {
         ) : (
           <>
             {this.state.works.length === 0 ? (
-              <Text>No Works</Text>
+              <Text style={this.styles.workContainer}>No Works</Text>
             ) : (
-              <ScrollView style={styles.worksContainer}>
+              <ScrollView
+                style={styles.worksContainer}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={this.state.loading}
+                    onRefresh={this.loadWorks}
+                  ></RefreshControl>
+                }
+              >
                 {this.state.works.map((work) => (
                   <Text
                     key={work.id}
