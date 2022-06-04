@@ -49,7 +49,8 @@ class Works extends Component {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.works) {
+        console.log(data)
+        if (data.status) {
           this.setState({ works: data.works });
         }
       })

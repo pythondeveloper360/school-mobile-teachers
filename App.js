@@ -30,7 +30,7 @@ export default class App extends Component {
     let password = await AsyncStorage.getItem("@password");
     if (email && password) {
       this.setState({ authLoading: true });
-      fetch("https://school-server.herokuapp.com/authTeacher", {
+      fetch("https://school-server.herokuapp.com/auth", {
         headers: {
           email: email,
           password: password,
@@ -48,8 +48,10 @@ export default class App extends Component {
     }
   }
   login() {
+    
     if (this.state.emailInput && this.state.passwordInput) {
-      fetch("https://school-server.herokuapp.com/authTeacher", {
+      this.setState({authLoading:true})
+      fetch("https://school-server.herokuapp.com/auth", {
         headers: {
           email: this.state.emailInput,
           password: this.state.passwordInput,
@@ -83,20 +85,26 @@ export default class App extends Component {
                     ),
                   }}
                 />
-                <Tab.Screen name="New Work" component={NewWork}
-                options={{
-                  tabBarLabel: "New work",
-                  tabBarIcon: () => (
-                    <Icon name="addfile" size={25} color="#0c9c88" />
-                  ),
-                }} />
-                <Tab.Screen name="Status" component={NewWork}
-                options={{
-                  tabBarLabel: "Works",
-                  tabBarIcon: () => (
-                    <Icon name="user" size={25} color="#0c9c88" />
-                  ),
-                }} />
+                <Tab.Screen
+                  name="New Work"
+                  component={NewWork}
+                  options={{
+                    tabBarLabel: "New work",
+                    tabBarIcon: () => (
+                      <Icon name="addfile" size={25} color="#0c9c88" />
+                    ),
+                  }}
+                />
+                <Tab.Screen
+                  name="Status"
+                  component={NewWork}
+                  options={{
+                    tabBarLabel: "Works",
+                    tabBarIcon: () => (
+                      <Icon name="user" size={25} color="#0c9c88" />
+                    ),
+                  }}
+                />
               </Tab.Navigator>
             </NavigationContainer>
           </>
